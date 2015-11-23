@@ -64,10 +64,10 @@ class User extends \Application\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'pkUserid', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'username', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'emailadress', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'password', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'ipaddress', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'passwordlastchanged', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'logintimes', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'lastlogindate', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'lastloginip', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'logindate', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'accounttype', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'firstname', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'surname', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'gender', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'othernames', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'fkRoleid');
+            return array('__isInitialized__', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'pkUserid', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'username', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'password', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'ipaddress', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'passwordlastchanged', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'logintimes', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'lastlogindate', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'lastloginip', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'logindate', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'accounttype', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'firstname', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'surname', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'gender', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'othernames', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'emailaddress', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'fkRoleid');
         }
 
-        return array('__isInitialized__', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'pkUserid', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'username', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'emailadress', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'password', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'ipaddress', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'passwordlastchanged', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'logintimes', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'lastlogindate', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'lastloginip', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'logindate', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'accounttype', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'firstname', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'surname', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'gender', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'othernames', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'fkRoleid');
+        return array('__isInitialized__', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'pkUserid', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'username', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'password', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'ipaddress', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'passwordlastchanged', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'logintimes', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'lastlogindate', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'lastloginip', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'logindate', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'accounttype', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'firstname', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'surname', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'gender', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'othernames', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'emailaddress', '' . "\0" . 'Application\\Entity\\User' . "\0" . 'fkRoleid');
     }
 
     /**
@@ -208,28 +208,6 @@ class User extends \Application\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUsername', array());
 
         return parent::getUsername();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setEmailaddress($emailaddress)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setEmailaddress', array($emailaddress));
-
-        return parent::setEmailaddress($emailaddress);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getEmailaddress()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEmailaddress', array());
-
-        return parent::getEmailaddress();
     }
 
     /**
@@ -516,6 +494,28 @@ class User extends \Application\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getOthernames', array());
 
         return parent::getOthernames();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setEmailaddress($emailaddress)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setEmailaddress', array($emailaddress));
+
+        return parent::setEmailaddress($emailaddress);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getEmailaddress()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEmailaddress', array());
+
+        return parent::getEmailaddress();
     }
 
     /**

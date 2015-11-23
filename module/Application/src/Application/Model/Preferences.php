@@ -55,43 +55,6 @@ class Preferences extends Commonmodel {
             }
     }
     
-    
-    /*
-     * Save user
-     */
-    public function saveUser($object) {
-        
-         if(!$object->getPkUserid()){
-                $oe = new \Application\Entity\User();
-         }else{
-                $oe = $this->em->getRepository("\Application\Entity\User")->find($object->getPkUserid());
-         }
-
-            //Set user object values to be saved
-            $oe->setFirstname($object->getFirstname());
-            $oe->setSurname($object->getSurname());
-            $oe->setGender($object->getGender());
-            $oe->setTitle($object->getTitle());
-            $oe->setOthernames($object->getOthernames());
-            $oe->setEmailaddress($object->getEmailaddress());
-            $oe->setUsername($object->getUsername());
-            $oe->setPassword($object->getPassword());
-            $oe->setFkRoleid($object->getFkRoleid());
-            
-            try{
-                //Commit values set to the object 
-                if(!$object->getPkUserid()){
-                    $this->em->persist($oe);
-                }
-                //Save values if just updating record
-                $this->em->flush($oe);
-                return $oe;
-
-            }catch(Exception $e){
-                throw($e->getMessages());
-            }
-    }
-    
     /*
      * Save department
      */

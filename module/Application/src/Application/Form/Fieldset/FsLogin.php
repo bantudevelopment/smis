@@ -41,7 +41,7 @@ class FsLogin extends Fieldset implements InputFilterProviderInterface
             ),
             'attributes' => array(
                 'required' => 'required',
-                'class'    => 'form-control',
+                'class'    => 'form-control input-lg',
                 'placeholder' => 'Username'
             )
         ));
@@ -54,7 +54,7 @@ class FsLogin extends Fieldset implements InputFilterProviderInterface
             ),
             'attributes' => array(
                 'required' => 'required',
-                'class'    => 'form-control',
+                'class'    => 'form-control input-lg',
                 'placeholder' => 'Password'
             )
         ));

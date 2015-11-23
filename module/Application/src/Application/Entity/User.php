@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * User
  *
- * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="USERNAME_UNIQUE", columns={"USERNAME"}),@ORM\UniqueConstraint(name="EMAILADDRESS_UNIQUE", columns={"EMAILADDRESS"})}, indexes={@ORM\Index(name="userrole_fk_idx", columns={"FK_ROLEID"})})
+ * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="USERNAME_UNIQUE", columns={"USERNAME"}), @ORM\UniqueConstraint(name="EMAILADDRESS_UNIQUE", columns={"EMAILADDRESS"})}, indexes={@ORM\Index(name="userrole_fk_idx", columns={"FK_ROLEID"})})
  * @ORM\Entity
  */
 class User
@@ -27,13 +27,6 @@ class User
      * @ORM\Column(name="USERNAME", type="string", length=50, nullable=false)
      */
     private $username = '';
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="EMAILADDRESS", type="string", length=45, nullable=true)
-     */
-    private $emailaddress = '';
 
     /**
      * @var string
@@ -127,6 +120,13 @@ class User
     private $othernames;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="EMAILADDRESS", type="string", length=45, nullable=true)
+     */
+    private $emailaddress;
+
+    /**
      * @var \Application\Entity\Role
      *
      * @ORM\ManyToOne(targetEntity="Application\Entity\Role")
@@ -171,33 +171,6 @@ class User
     {
         return $this->username;
     }
-    
-    
-    /**
-     * Set emailaddress
-     *
-     * @param string $emailaddress
-     *
-     * @return User
-     */
-    public function setEmailaddress($emailaddress)
-    {
-        $this->emailadress = $emailaddress;
-
-        return $this;
-    }
-
-    /**
-     * Get emailaddress
-     *
-     * @return string
-     */
-    public function getEmailaddress()
-    {
-        return $this->emailaddress;
-    }
-    
-    
 
     /**
      * Set password
@@ -509,6 +482,30 @@ class User
     public function getOthernames()
     {
         return $this->othernames;
+    }
+
+    /**
+     * Set emailaddress
+     *
+     * @param string $emailaddress
+     *
+     * @return User
+     */
+    public function setEmailaddress($emailaddress)
+    {
+        $this->emailaddress = $emailaddress;
+
+        return $this;
+    }
+
+    /**
+     * Get emailaddress
+     *
+     * @return string
+     */
+    public function getEmailaddress()
+    {
+        return $this->emailaddress;
     }
 
     /**

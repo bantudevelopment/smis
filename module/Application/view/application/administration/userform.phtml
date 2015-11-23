@@ -63,7 +63,32 @@
            <?php //echo $this->formHidden($form->get('Faculty')->get('pkFacultyid')->setValue($id)); ?>
        </div>
        <div class="col-sm-4"><?php echo $this->formElementErrors($form->get('User')->get('basicdetails')->get('gender')); ?></div>
+    </div>  
+                        <hr> 
+    <div class="form-group">   
+       <div class="col-sm-3"><?php echo $this->formLabel($form->get('Staff')->get('fkDeptid')); ?> </div>
+       <div class="col-sm-5">
+           <?php echo $this->formElement($form->get('Staff')->get('fkDeptid')); ?>
+           <?php //echo $this->formHidden($form->get('Faculty')->get('pkFacultyid')->setValue($id)); ?>
+       </div>
+       <div class="col-sm-4"><?php echo $this->formElementErrors($form->get('Staff')->get('fkDeptid')); ?></div>
     </div>     
+    <div class="form-group">   
+       <div class="col-sm-3"><?php echo $this->formLabel($form->get('Staff')->get('workmode')); ?> </div>
+       <div class="col-sm-5">
+           <?php echo $this->formElement($form->get('Staff')->get('workmode')); ?>
+           <?php //echo $this->formHidden($form->get('Faculty')->get('pkFacultyid')->setValue($id)); ?>
+       </div>
+       <div class="col-sm-4"><?php echo $this->formElementErrors($form->get('Staff')->get('workmode')); ?></div>
+    </div>
+    <div class="form-group">   
+       <div class="col-sm-3"><?php echo $this->formLabel($form->get('ishead')); ?> </div>
+       <div class="col-sm-5">
+           <?php echo $this->formElement($form->get('ishead')); ?>
+           <?php //echo $this->formHidden($form->get('Faculty')->get('pkFacultyid')->setValue($id)); ?>
+       </div>
+       <div class="col-sm-4"><?php echo $this->formElementErrors($form->get('ishead')); ?></div>
+    </div>  
                         
                         <hr>                  
     

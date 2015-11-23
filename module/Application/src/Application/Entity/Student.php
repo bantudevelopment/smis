@@ -57,14 +57,14 @@ class Student
     private $ta;
 
     /**
-     * @var \Application\Entity\User
+     * @var \Application\Entity\Country
      *
-     * @ORM\ManyToOne(targetEntity="Application\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Country")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="FK_USERID", referencedColumnName="PK_USERID")
+     *   @ORM\JoinColumn(name="FK_COUNTRYID", referencedColumnName="PK_COUNTRYID")
      * })
      */
-    private $fkUserid;
+    private $fkCountryid;
 
     /**
      * @var \Application\Entity\District
@@ -77,14 +77,14 @@ class Student
     private $fkDistrictid;
 
     /**
-     * @var \Application\Entity\Country
+     * @var \Application\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Country")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="FK_COUNTRYID", referencedColumnName="PK_COUNTRYID")
+     *   @ORM\JoinColumn(name="FK_USERID", referencedColumnName="PK_USERID")
      * })
      */
-    private $fkCountryid;
+    private $fkUserid;
 
 
 
@@ -219,27 +219,27 @@ class Student
     }
 
     /**
-     * Set fkUserid
+     * Set fkCountryid
      *
-     * @param \Application\Entity\User $fkUserid
+     * @param \Application\Entity\Country $fkCountryid
      *
      * @return Student
      */
-    public function setFkUserid(\Application\Entity\User $fkUserid = null)
+    public function setFkCountryid(\Application\Entity\Country $fkCountryid = null)
     {
-        $this->fkUserid = $fkUserid;
+        $this->fkCountryid = $fkCountryid;
 
         return $this;
     }
 
     /**
-     * Get fkUserid
+     * Get fkCountryid
      *
-     * @return \Application\Entity\User
+     * @return \Application\Entity\Country
      */
-    public function getFkUserid()
+    public function getFkCountryid()
     {
-        return $this->fkUserid;
+        return $this->fkCountryid;
     }
 
     /**
@@ -267,26 +267,26 @@ class Student
     }
 
     /**
-     * Set fkCountryid
+     * Set fkUserid
      *
-     * @param \Application\Entity\Country $fkCountryid
+     * @param \Application\Entity\User $fkUserid
      *
      * @return Student
      */
-    public function setFkCountryid(\Application\Entity\Country $fkCountryid = null)
+    public function setFkUserid(\Application\Entity\User $fkUserid = null)
     {
-        $this->fkCountryid = $fkCountryid;
+        $this->fkUserid = $fkUserid;
 
         return $this;
     }
 
     /**
-     * Get fkCountryid
+     * Get fkUserid
      *
-     * @return \Application\Entity\Country
+     * @return \Application\Entity\User
      */
-    public function getFkCountryid()
+    public function getFkUserid()
     {
-        return $this->fkCountryid;
+        return $this->fkUserid;
     }
 }

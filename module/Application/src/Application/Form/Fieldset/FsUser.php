@@ -136,7 +136,7 @@ class FsUser extends Fieldset implements InputFilterProviderInterface
             'fkRoleid' => array(
                 'required' => true
             ),
-             'emailaddress' => array(
+            'emailaddress' => array(
                 'required' => false,
                 'validators' => array(
                      array(
@@ -155,7 +155,6 @@ class FsUser extends Fieldset implements InputFilterProviderInterface
                     array(
                         'name' => 'DoctrineModule\Validator\UniqueObject',
                         'options' => array(
-                            
                             'object_repository' => $this->em->getRepository('Application\Entity\User'),
                             'fields' => 'username',
                             'object_manager' => $this->em,
@@ -168,7 +167,7 @@ class FsUser extends Fieldset implements InputFilterProviderInterface
                                             'max' => 20
                                         ),
                                     )
-                ) 
+                        )
             ),
             'password' => array(
                 'required' => true,

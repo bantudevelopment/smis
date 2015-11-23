@@ -13,6 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\AuthenticationService;
 use Zend\Session\Container;
+use Zend\Http\PhpEnvironment\RemoteAddress;
 
 class LoginController extends AbstractActionController
 {
@@ -25,11 +26,11 @@ class LoginController extends AbstractActionController
     }
     
     public function onDispatch(\Zend\Mvc\MvcEvent $e) {
-//        $this->authservice = new AuthenticationService();
-//        if($this->authservice->hasIdentity()){
-//            $this->redirect()->toRoute("home",array('action'=>'index'));
-//        }
-//        
+        $this->authservice = new AuthenticationService();
+        if($this->authservice->hasIdentity()){
+            $this->redirect()->toRoute("home",array('action'=>'index'));
+        }
+        
         $this->layout()->setVariables(array("activemodule"=>$this->getEvent()->getRouteMatch()->getMatchedRouteName()));
         parent::onDispatch($e);
     }
@@ -62,20 +63,47 @@ class LoginController extends AbstractActionController
     {
         $formlogin = new \Application\Form\Login();
         
-        if ($this->request->isPost()) {
-            $this->redirect()->toRoute("home",array('action'=>'index'));
-//            $formlogin->setData($this->request->getPost());
-//                if ($formlogin->isValid()) {
-//                    $loginCredentials = $this->request->getPost('Login');
-//                   
-//                $messages = $this->cs->auth($loginCredentials['username'], $this->cs->_hashing($loginCredentials['password']));
-//                //$messages = $this->cs->auth($loginCredentials['username'],$loginCredentials['password']);
-//                
-//                if (empty($messages)) {
-//                    return $this->redirect()->toRoute('home', array('action' => 'index'));
-//                }else{
-//                    
-//                   //If it new student then authenticate using email address in enrolment 
+        $formlogin->bind($this->request->getPost());
+        
+        $messages = array();
+        
+        if ($this->request->isPost()){
+            $formlogin->setData($this->request->getPost());
+            if ($formlogin->isValid()) {
+                 $loginCredentials = $this->request->getPost('Login');
+
+                 $messages = $this->cs->auth($loginCredentials['username'], $this->cs->_hashing($loginCredentials['password']));
+                //$messages = $this->cs->auth($loginCredentials['username'],$loginCredentials['password']);
+                
+                if (empty($messages)) {
+                    $identity           = $this->authservice->getIdentity();
+                    $this->userid       = $identity['pkUserid'];
+                    //If valid, check if account password requires resetting, if true direct user to renew password
+                    if(!$this->cs->hasPasswordExpired($this->userid, $this->em)){
+                        //Log time and ip address
+                        $ipaddress = new RemoteAddress();
+                        $pr        = new \Application\Model\Preferences($this->em);
+                        //Get user entity
+                        $userentity = $this->em->getRepository("\Application\Entity\User")->find($this->userid);
+                        $userentity->setLastloginip($userentity->getIpaddress());
+                        $userentity->setIpaddress($ipaddress->getIpAddress());
+                        $userentity->setLastlogindate($userentity->getLogindate());
+                        $userentity->setLogindate(new \Datetime());
+                        $logintimes = (int)$userentity->getLogintimes() + 1;
+                        $userentity->setLogintimes($logintimes);
+                        
+                        $pr->saveUser($userentity);
+                        
+                        return $this->redirect()->toRoute('home', array('action' => 'index'));
+                    }
+                    $usersession = new Container('USER');
+                    $usersession->userid  = $this->userid;
+                    //Clear session
+                    $this->authservice->clearIdentity();
+                    return $this->redirect()->toRoute('login', array('action' => 'renewpassword')); 
+                }else{
+                    
+                   //If it new student then authenticate using email address in enrolment 
 //                   $enrollmentauth = $this->cs->authNewStudent($loginCredentials['username'], $loginCredentials['password'],$this->em);
 //                   if(count($enrollmentauth)){
 //                       $registersession = new Container('ENROLLMENT');
@@ -87,12 +115,44 @@ class LoginController extends AbstractActionController
 //                        $formlogin->get('Login')->get('username')->setMessages(array($messages['username']));
 //                   if(!empty($messages['password']))
 //                        $formlogin->get('Login')->get('password')->setMessages(array($messages['password']));
-//                }
-//                
-//            }
+                }
+                
+            }else{
+                $messages = $formlogin->getMessages();
+            }
+            
+        }
+
+        return new ViewModel(array("frmlogin"=>$formlogin,"errormessage"=>$messages));
+    }
+    
+    
+    
+    public function renewpasswordAction(){
+        $form = new \Application\Form\Resetpassword($this->em);
+        $usersession = new Container('USER');
+        $userid      =  $usersession->userid;
+ 
+        $form->bind($this->request->getPost());
+        if($this->request->isPost()){
+            $form->setData($this->request->getPost());
+            if($form->isValid()){
+                
+                //Reset password
+                $formdata = $form->getData();
+                $preferences = new \Application\Model\Preferences($this->em); 
+                //Get current id object
+                $userEntity = $this->em->getRepository('\Application\Entity\User')->find($formdata['Password']['pkUserid']);
+                $userEntity->setPassword($this->cs->_hashing($formdata['Password']['password']));
+                $userEntity->setPasswordlastchanged(new \DateTime());
+                $preferences->saveUser($userEntity);
+                
+                $usersession->getManager()->getStorage()->clear('USER');
+                return $this->redirect()->toRoute('login', array('action' => 'index')); 
+            }
         }
         
-        return new ViewModel(array("frmlogin"=>$formlogin));
+        return new ViewModel(array("form"=>$form,"userid"=>$userid));
     }
     
     

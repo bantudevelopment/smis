@@ -27,11 +27,11 @@ class IndexController extends AbstractActionController
 
     public function onDispatch(\Zend\Mvc\MvcEvent $e) {
         
-//        $this->authservice = new AuthenticationService();
-//        if(!$this->authservice->hasIdentity()){
-//            $this->redirect()->toRoute("login",array('action'=>'index'));
-//        }
-//        
+        $this->authservice = new AuthenticationService();
+        if(!$this->authservice->hasIdentity()){
+            $this->redirect()->toRoute("login",array('action'=>'index'));
+        }
+        
         $this->layout()->setVariables(array("activemodule"=>$this->getEvent()->getRouteMatch()->getMatchedRouteName()));
         parent::onDispatch($e);
     }

@@ -25,18 +25,15 @@ class FsStaff extends Fieldset implements InputFilterProviderInterface
     protected $em;
     
     /*
-     * Fetch list of program group
+     * Fetch list of departments
      */
-    public function getStaff(){
+    public function getDepartments(){
+        $options = array();
+        //Query departments
+        $departments = $this->em->getRepository("\Application\Entity\Department")->findAll();
         
-        $options[""] = "--Select--";
-        //Query all users(Lecturers) not assigned to other departments
-        $userquery = $this->em->createQuery(" SELECT u"
-                                          . " FROM \Application\Entity\User u JOIN u.fkRoleid r where r.roleName = 'LECT' "
-                                          . " AND u.pkUserid NOT IN( SELECT IDENTITY(s.fkUserid) FROM \Application\Entity\Staff s )");
-        
-        foreach($userquery->getResult() as $user ){
-            $options[$user->getPkUserid()] = $user->getFirstname()." ".$user->getSurname();
+        foreach($departments as $department ){
+            $options[$department->getPkDeptid()] = $department->getDeptName()." (".$department->getDeptCode().")";
         }
         
         return $options;
@@ -56,10 +53,11 @@ class FsStaff extends Fieldset implements InputFilterProviderInterface
         
         $this->add(array(
             'type' => 'Zend\Form\Element\Select',
-            'name' => 'fkUserid',
+            'name' => 'fkDeptid',
             'options' => array(
-                'label' => 'Staff name:*',
-                'value_options' => $this->getStaff()
+                'label' => 'Department:*',
+                'value_options' => $this->getDepartments(),
+                'empty_option'  => "--Select department--",
             ),
             'attributes' => array(
                 'required' => 'required',
@@ -69,19 +67,17 @@ class FsStaff extends Fieldset implements InputFilterProviderInterface
         ));
         
          $this->add(array(
-            'name' => 'fkDeptid',
-            'type' => 'hidden',
-            'options' => array(
-                'label' => ' '
-            ),
+            'name' => 'fkUserid',
+            'type' => 'hidden'
         ));
          
         $this->add(array(
             'type' => 'Zend\Form\Element\Select',
-            'name' => 'mode',
+            'name' => 'workmode',
             'options' => array(
                 'label' => 'Mode:*',
-                'value_options' => array("FULLTIME"=>"FULLTIME","PARTTIME"=>"PARTTIME")
+                'value_options' => array("FULLTIME"=>"Full time","PARTTIME"=>"Part time"),
+                'empty_option'  => '--Select--'
             ),
             'attributes' => array(
                 'required' => 'required',
@@ -91,28 +87,9 @@ class FsStaff extends Fieldset implements InputFilterProviderInterface
         ));
         
         $this->add(array(
-            'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'ishead',
-            'options' => array(
-                'label' => 'Head of department:',
-                'checked_value' => '1',
-                'unchecked_value' => '0'
-            )
-        ));
-        
-        $this->add(array(
             'name' => 'pkStaffid',
-            'type' => 'hidden',
-            'options' => array(
-                'label' => ' '
-            ),
+            'type' => 'hidden'
         ));
-        
-        
-        
-        
-       
-
         
     }
 
@@ -122,10 +99,10 @@ class FsStaff extends Fieldset implements InputFilterProviderInterface
     public function getInputFilterSpecification()
     {
         return array(
-            'fkUserid' => array(
+            'fkDeptid' => array(
                 'required' => true
             ),
-            'mode' => array(
+            'workmode' => array(
                 'required' => true
             ),
 

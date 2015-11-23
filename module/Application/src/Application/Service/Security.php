@@ -9,6 +9,7 @@ namespace Application\Service;
  */
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 
 class Security implements ServiceLocatorAwareInterface{
@@ -74,8 +75,20 @@ class Security implements ServiceLocatorAwareInterface{
      * Check if user account password has expired
      * @return boolean
      */
-    public function hasPasswordExpired(){
-        return true;
+    public function hasPasswordExpired($userid,$em){
+        
+        $settings = $em->getRepository("\Application\Entity\Settings")->find(1);
+        
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('Application\Entity\User', 'u');
+        $rsm->addFieldResult('u', 'PASSWORDLASTCHANGED', 'passwordlastchanged');
+
+        $query = $em->createNativeQuery("SELECT PASSWORDLASTCHANGED FROM user "
+                                      . " where DATEDIFF(CURDATE(),PASSWORDLASTCHANGED) > :num1 AND PK_USERID = :num2  ",$rsm);
+                 $query->setParameter('num1',$settings->getPasswordExpireydays());
+                 $query->setParameter('num2',$userid);
+        
+        return (count($query->getResult())>0)?true:false;
     } 
     
     /*
@@ -104,7 +117,7 @@ class Security implements ServiceLocatorAwareInterface{
         
         if ($authResult->isValid()) {
             
-            //If valid, check if account password requires resetting, if true direct user to renew password
+            
             
             //If false, log access. Set the account into session
             
@@ -128,7 +141,8 @@ class Security implements ServiceLocatorAwareInterface{
         $exist = $em->getRepository("\Application\Entity\Enrollment")->findOneBy(array("emailaddress"=>$username,"temppwd"=>$password));
         return $exist;
     }
-    
+
+
     public function _hashing($str){
         $salt = '';
   	for ($i=1;$i<=10;$i++) {

@@ -77,7 +77,6 @@ class AdministrationController extends AbstractActionController
         $facultydetails = "";
         $form = new \Application\Form\Faculty($this->em);
         $form->bind($this->request->getPost());
-        
          //If edit faculty has been selected then select from database
         $id = $this->getEvent()->getRouteMatch()->getParam('id');
         if($id){
@@ -481,6 +480,13 @@ class AdministrationController extends AbstractActionController
     
    
    public function usersAction(){
+       
+        $successMsg = "";
+        $flashMessenger = $this->flashMessenger();
+        if($flashMessenger->hasSuccessMessages()){
+            $successMsg = implode("<br>", $flashMessenger->getSuccessMessages());
+        }
+       
        $users =  $this->em->getRepository("\Application\Entity\User")->findAll();
        return new ViewModel(array("users"=>$users));
    }
@@ -503,37 +509,20 @@ class AdministrationController extends AbstractActionController
         if($this->request->getPost('save')){
             $form->setData($this->request->getPost());
             if($form->isValid()){
+                
+                $staffmodel = new \Application\Model\Staff($this->em);
                 $formdata = $form->getData();
-                //Check if action is to update record
-                if($formdata['User']['pkUserid']){
-                    //Get existing record information
-                    $entity = $this->em->getRepository('\Application\Entity\User')->find($formdata['User']['pkUserid']);
-                }else{
-                    //Set new entity
-                    $entity = new \Application\Entity\User();
-                }
                 
-                //Check if staff has been selected
-                $roleid = ($formdata['User']['fkRoleid'])?$this->em->getRepository('\Application\Entity\Role')->find($formdata['User']['fkRoleid']):NULL;
-
-                //Initialize fields
-                $entity->setUsername($formdata['User']['username']);
-                $entity->setFirstname($formdata['User']['basicdetails']['firstname']);
-                $entity->setSurname($formdata['User']['basicdetails']['surname']);
-                $entity->setOthernames($formdata['User']['basicdetails']['othernames']);
-                $entity->setGender($formdata['User']['basicdetails']['gender']);
-                $entity->setPassword($formdata['User']['password']);
-                $entity->setTitle($formdata['User']['basicdetails']['title']);
-                $entity->setEmailaddress($formdata['User']['emailaddress']);
-                $entity->setFkRoleid($roleid);
-                
-                if($this->preferences->saveUser($entity)){
-                    //Set success message and then redirect to view
+                if($staffmodel->registerUser($formdata)){
                     $this->flashMessenger()->addSuccessMessage("User information saved");
                     $this->redirect()->toRoute('administration', array('action'=>'users'));
                 }
-                
-                
+//                
+//                if($this->preferences->saveUser($entity)){
+//                    //Set success message and then redirect to view
+//                    $this->flashMessenger()->addSuccessMessage("User information saved");
+//                    $this->redirect()->toRoute('administration', array('action'=>'users'));
+//                } 
             }
 
             

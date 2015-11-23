@@ -96,73 +96,72 @@ abstract class Usermodel extends Commonmodel {
         return $this->accountType;
     }
     
-    
     /*
      * Save user information
      */
-    public function saveUserObject($userobject){
-        
-        if(!$userobject->getPkUserid()){
-            $user = new \Application\Entity\User();
-        }else{
-            $user = $this->em->getRepository("\Application\Entity\User")->find($userobject->getPkUserid());
-        }
-        
-        //Set user object values to be saved
-        $user->setTitle($userobject->getTitle());
-        $user->setFirstname($userobject->getFirstname());
-        $user->setSurname($userobject->getSurname());
-        $user->setFkRoleid($userobject->getFkRoleid());
-        $user->setUsername($userobject->getUsername());
-        $user->setEmailAddress($userobject->getEmailAddress());
-        $user->setGender($userobject->getGender());
-        $user->setInitial($userobject->getInitial());
-        $user->setPhotoUrl($userobject->getPhotoUrl());
-        $user->setDateCreated($userobject->getDateCreated());
-        $user->setLastLoginDate($userobject->getLastLoginDate());
-        $user->setIpaddress($userobject->getIpaddress());
-        $user->setPassword($userobject->getPassword());
-        
-        try{
-            //Commit values set to the object 
-            if(!$userobject->getPkUserid()){
-                $this->em->persist($user);
-            }
-            
-            //Save values if just updating record
-            $this->em->flush($user);
-            return $user;
-            
-        }catch(Exception $e){
-            throw("Failed to save");
-        }
-        
-    }
+//    public function saveUserObject($userobject){
+//        
+//        if(!$userobject->getPkUserid()){
+//            $user = new \Application\Entity\User();
+//        }else{
+//            $user = $this->em->getRepository("\Application\Entity\User")->find($userobject->getPkUserid());
+//        }
+//        
+//        //Set user object values to be saved
+//        $user->setTitle($userobject->getTitle());
+//        $user->setFirstname($userobject->getFirstname());
+//        $user->setSurname($userobject->getSurname());
+//        $user->setFkRoleid($userobject->getFkRoleid());
+//        $user->setUsername($userobject->getUsername());
+//        $user->setEmailAddress($userobject->getEmailAddress());
+//        $user->setGender($userobject->getGender());
+//        $user->setInitial($userobject->getInitial());
+//        $user->setPhotoUrl($userobject->getPhotoUrl());
+//        $user->setDateCreated($userobject->getDateCreated());
+//        $user->setLastLoginDate($userobject->getLastLoginDate());
+//        $user->setIpaddress($userobject->getIpaddress());
+//        $user->setPassword($userobject->getPassword());
+//        
+//        try{
+//            //Commit values set to the object 
+//            if(!$userobject->getPkUserid()){
+//                $this->em->persist($user);
+//            }
+//            
+//            //Save values if just updating record
+//            $this->em->flush($user);
+//            return $user;
+//            
+//        }catch(Exception $e){
+//            throw("Failed to save");
+//        }
+//        
+//    }
     
     
     /*
      * Sets user object values
      */
-    public function setUserObject($arrayval){
-        //Set parameters
-        $object = new \Application\Entity\User();
-        
-        $object->setFkRoleid($arrayval['role']);
-        $object->setUsername($arrayval['username']);
-        $object->setTitle($arrayval['title']);
-        $object->setPhotoUrl($arrayval['url']);
-        $object->setSurname($arrayval['surname']);
-        $object->setFirstname($arrayval['firstname']);
-        $object->setGender($arrayval['gender']);
-        $object->setInitial($arrayval['initial']);
-        $object->setDateCreated($arrayval['datecreated']);
-        $object->setEmailAddress($arrayval['emailaddress']);
-        $object->setPassword($arrayval['password']);
-        $object->setIpaddress($arrayval['ipaddress']);
-        $object->setLastLoginDate($arrayval['logindate']);
-        
-        return $object;
-    }
+//    public function setUserObject($arrayval){
+//        //Set parameters
+//        $object = new \Application\Entity\User();
+//        
+//        $object->setFkRoleid($arrayval['role']);
+//        $object->setUsername($arrayval['username']);
+//        $object->setTitle($arrayval['title']);
+//        $object->setPhotoUrl($arrayval['url']);
+//        $object->setSurname($arrayval['surname']);
+//        $object->setFirstname($arrayval['firstname']);
+//        $object->setGender($arrayval['gender']);
+//        $object->setInitial($arrayval['initial']);
+//        $object->setDateCreated($arrayval['datecreated']);
+//        $object->setEmailAddress($arrayval['emailaddress']);
+//        $object->setPassword($arrayval['password']);
+//        $object->setIpaddress($arrayval['ipaddress']);
+//        $object->setLastLoginDate($arrayval['logindate']);
+//        
+//        return $object;
+//    }
     
     
     

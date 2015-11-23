@@ -12,16 +12,80 @@ namespace Application\Model;
  * @author hkumwembe
  */
 class Staff extends Usermodel {
+
     
-    
-    
-      public function registerUser(){
-      
+      public function registerUser($formdata){
+
+        $entity = new \Application\Entity\User();
+
+        $roleid = $this->em->getRepository('\Application\Entity\Role')->find($formdata['User']['fkRoleid']);
+
+        //Initialize fields
+        $entity->setUsername($formdata['User']['username']);
+        $entity->setFirstname($formdata['User']['basicdetails']['firstname']);
+        $entity->setSurname($formdata['User']['basicdetails']['surname']);
+        $entity->setOthernames($formdata['User']['basicdetails']['othernames']);
+        $entity->setGender($formdata['User']['basicdetails']['gender']);
+        $entity->setPassword($formdata['User']['password']);
+        $entity->setTitle($formdata['User']['basicdetails']['title']);
+        $entity->setEmailaddress($formdata['User']['emailaddress']);
+        $entity->setFkRoleid($roleid);  
+        $fkUserid = $this->saveUser($entity);  
+        
         //Save user in user table
-      
-        //Save in staff table
-      
+        if($fkUserid){
+            //Set staff entity
+            $staffentity = new \Application\Entity\Staff();
+            
+            $fkDeptid    = $this->em->getRepository('\Application\Entity\Department')->find($formdata['Staff']['fkDeptid']);
+            
+            $staffentity->setFkDeptid($fkDeptid);
+            $staffentity->setFkUserid($fkUserid);
+            $staffentity->setWorkmode($formdata['Staff']['workmode']);
+            
+            //Save in staff table
+            $staffid = $this->saveStaff($staffentity);  
+            //Assign to department as head
+            if($formdata['ishead']){
+                $departmentModel = new \Application\Model\Preferences($this->em);
+                // Update is head
+                $deptEntity = $fkDeptid->setFkStaffid($staffid);
+                $departmentModel->saveDepartment($deptEntity); 
+            }
+        }
+        
+        return $fkUserid;
       }
+    
+    /*
+     * Save staff
+     */
+    public function saveStaff($object) {
+        
+         if(!$object->getPkStaffid()){
+                $oe = new \Application\Entity\Staff();
+         }else{
+                $oe = $this->em->getRepository("\Application\Entity\Staff")->find($object->getPkStaffid());
+         }
+
+        //Set staff object values to be saved
+        $oe->setFkDeptid($object->getFkDeptid());
+        $oe->setFkUserid($object->getFkUserid());
+        $oe->setWorkmode($object->getWorkmode());
+            
+        try{
+            //Commit values set to the object 
+            if(!$object->getPkStaffid()){
+                $this->em->persist($oe);
+            }
+            //Save values if just updating record
+            $this->em->flush($oe);
+            return $oe;
+
+        }catch(Exception $e){
+            throw($e->getMessages());
+        }
+    }
     
     
     /*
@@ -62,19 +126,5 @@ class Staff extends Usermodel {
      */
     public function assignModule($moduleparams) {
         
-    }
-    
-    /*
-     * Set staff values
-     */
-    public function setStaffObject($arrayval){
-
-        $object = new \Application\Entity\Staff();
-        
-        $object->setFkUserid($arrayval['user']);
-        $object->setFkDeptid($arrayval['dept']);
-        $object->setMode($arrayval['mode']);
-        
-        return $object;
     }
 }
