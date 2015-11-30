@@ -91,7 +91,7 @@ class LoginController extends AbstractActionController
                         $userentity->setLogindate(new \Datetime());
                         $logintimes = (int)$userentity->getLogintimes() + 1;
                         $userentity->setLogintimes($logintimes);
-                        
+                        //Update session information
                         $pr->saveUser($userentity);
                         
                         return $this->redirect()->toRoute('home', array('action' => 'index'));
