@@ -71,7 +71,10 @@
                             <a title="modify" id="<?php //echo $counter; ?>" href="<?php echo $this->url("administration",array("action"=>"programclassform","id"=>$initialprogram->getPkProgramid(),"subid"=>$class->getPkClassid())); ?>" style="cursor: pointer" ><i class="glyphicon glyphicon-edit"></i> Edit</a>
                         </li>
                         <li role="presentation">
-                            <a  href="<?php //echo $this->url("administration",array("action"=>"lecturers","id"=>$department->getPkDepartmentid())); ?>"><i class="glyphicon glyphicon-remove"></i> Delete</a>
+                            <a  href="<?php echo $this->url("administration",array("action"=>"classmodules","id"=>$class->getPkClassid())); ?>"><i class="glyphicon glyphicon-asterisk"></i> Class modules</a>
+                        </li> 
+                        <li role="presentation">
+                            <a  href="<?php //echo $this->url("administration",array("action"=>"classmodules","id"=>$class->getPkClassid())); ?>"><i class="glyphicon glyphicon-remove"></i> Delete</a>
                         </li> 
                        
                     </ul>

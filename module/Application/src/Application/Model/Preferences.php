@@ -151,7 +151,7 @@ class Preferences extends Commonmodel {
     }
 
    /*
-     * Save class
+     * Save academic period
      */
     public function saveAcademicPeriod($object) {
         
@@ -182,7 +182,40 @@ class Preferences extends Commonmodel {
             }
     }
 
+/*
+     * Save class module
+     */
+    public function saveClassModule($object) {
+        
+         if(!$object->getPkClassmoduleid()){
+                $oe = new \Application\Entity\Classmodule();
+         }else{
+                $oe = $this->em->getRepository("\Application\Entity\Classmodule")->find($object->getPkClassmoduleid());
+         }
 
+            //Set program object values to be saved
+            $oe->setCwkweight($object->getCwkweight());
+            $oe->setExweight($object->getExweight());
+            $oe->setFkAcademicperiod($object->getFkAcademicperiod());
+            $oe->setFkClassid($object->getFkClassid());
+            $oe->setFkModuleid($object->getFkModuleid());
+            $oe->setIsCore($object->getIsCore());
+            $oe->setIsProject($object->getIsProject());
+            $oe->setScheme($object->getScheme());
+            
+            try{
+                //Commit values set to the object 
+                if(!$object->getPkClassmoduleid()){
+                    $this->em->persist($oe);
+                }
+                //Save values if just updating record
+                $this->em->flush($oe);
+                return $oe;
+
+            }catch(Exception $e){
+                throw($e->getMessages());
+            }
+    }
 
 
 

@@ -87,24 +87,72 @@ abstract class Commonmodel{
         }
     }
     
-    /*
-     * Get current period
+/*
+     * Fetch available list
      */
-    public function getCurrentPeriod($class=null){
-        $date = new \DateTime();
-        $periodquery = $this->em->createQuery("SELECT p "
-                                              . " FROM \Application\Entity\Academicyear p WHERE p.groupPeriod = (SELECT PC.group FROM \Application\Entity\Programgroup PG Join PG.fkProgramid P Join P.fkProgramcategoryid PC WHERE PG.pkGroupid = :classid )"
-                                              . " AND :currentdate BETWEEN p.startDate AND p.endDate "
-                                              . " ORDER BY p.pkPeriodid")
-                                ->setParameter('classid', $class)
-                                ->setParameter('currentdate', $date);
-
-        foreach($periodquery->getResult() as $period ){
-
+    public function getAvailableModules($classid){
+        $options = array();
+        $academicperiodid = $this->getCurrentYr();
+        $modulequery  = $this->em->createQuery("SELECT M FROM \Application\Entity\Module M"
+                                             . " WHERE M.pkModuleid NOT IN( SELECT IDENTITY(C.fkModuleid) FROM "
+                                             . " \Application\Entity\Classmodule C JOIN C.fkAcademicperiod A WHERE C.fkClassid = :classid "
+                                             . " AND A.parentid = :parentid ) ")
+                             ->setParameter('classid', $classid)
+                             ->setParameter('parentid', $academicperiodid[0]->getPkAcademicperiodid());
+        foreach($modulequery->getResult() as $module ){
+            $options[$module->getPkModuleid()] = $module->getModuleName()." (".$module->getModuleCode().")";
         }
-        return $period;
         
+        return $options;
     }
+    
+   public function getClassModules($classid){
+       
+       $academicyear = $this->getCurrentYr();
+
+       $query = $this->em->createQuery(" SELECT C,A FROM \Application\Entity\Classmodule C "
+                                       . " JOIN C.fkAcademicperiod A "
+                                       . " WHERE A.parentid = :period "
+                                       . " AND C.fkClassid = :classid")
+                
+                          ->setParameter("period", $academicyear[0]->getPkAcademicperiodid())
+                          ->setParameter("classid", $classid);
+        
+        return $query->getResult();
+   } 
+    
+    
+    /*
+     * Generate current academic year
+     */
+    
+    public function getCurrentYr($class = null){
+        //Get current date
+        $date = new \DateTime();
+        
+//        "SELECT 
+//  `PK_ACADEMICPERIODID`,
+//  `ACYR`,
+//  `START_DATE`,
+//  `END_DATE`,
+//  `CATEGORY`,
+//  `PARENTID` 
+//FROM
+//  `polysmis`.`academicyear` 
+//WHERE NOW() BETWEEN `START_DATE` AND END_DATE
+//AND `PARENTID` IS NULL
+//AND `CATEGORY` = 'GENERIC'"
+        
+        $query = $this->em->createQuery(" SELECT A FROM \Application\Entity\Academicyear A"
+                                       ." WHERE :currentdate BETWEEN A.startDate AND A.endDate "
+                                       . " AND A.parentid is null "
+                                       . " AND A.category = 'GENERIC' ")
+                
+                          ->setParameter("currentdate", $date);
+        
+        return $query->getResult();
+    }
+    
     /*
      * Get date difference in days
      */

@@ -344,7 +344,93 @@ class AdministrationController extends AbstractActionController
         return new ViewModel(array("form"=>$form,"details"=>$classdetails,"program"=>$program));
    }
     
+   public function classmodulesAction(){
+       
+        $successMsg = "";
+        $flashMessenger = $this->flashMessenger();
+        if($flashMessenger->hasSuccessMessages()){
+            $successMsg = implode("<br>", $flashMessenger->getSuccessMessages());
+        }
+        
+        $id = $this->getEvent()->getRouteMatch()->getParam('id');
+        
+        //Get list of class modules
+        $modules = $this->preferences->getClassModules($id);
+        
+        //Get class details
+        $classes = $this->em->getRepository("\Application\Entity\Classes")->find($id);
+        
+        return new ViewModel(array("modules"=>$modules,"class"=>$classes,"msg"=>$successMsg));
+    } 
+   
     
+    /*
+     * Redirect to class module form view and save class module information
+     */
+    public function classmoduleformAction(){
+        
+        $moduledetails  = "";
+        $id             = $this->getEvent()->getRouteMatch()->getParam('id');
+        $classmoduleid  = $this->getEvent()->getRouteMatch()->getParam('subid');
+        $period         = $this->preferences->getCurrentYr();
+        $form           = new \Application\Form\Classmodule($period[0]->getPkAcademicperiodid(),$this->em,$id,$classmoduleid);
+        $form->bind($this->request->getPost());
+        
+         //If edit faculty has been selected then select from database
+        
+        if($classmoduleid){
+            $moduledetails = $this->em->getRepository("\Application\Entity\Classmodule")->find($classmoduleid);
+        }
+        
+        $availablemodules = $this->preferences->getAvailableModules($id);
+        
+        //Get faculty details
+        $class = $this->em->getRepository("\Application\Entity\Classes")->find($id);
+        
+        if($this->request->getPost('save')){
+            $form->setData($this->request->getPost());
+            if($form->isValid()){
+                $formdata = $form->getData();
+               
+                //Check if action is to update record
+                if($formdata['Classmodule']['pkClassmoduleid']){
+                    //Get existing record information
+                    $entity = $this->em->getRepository('\Application\Entity\Classmodule')->find($formdata['Classmodule']['pkClassmoduleid']);
+                }else{
+                    //Set new entity
+                    $entity = new \Application\Entity\Classmodule();
+                }
+                
+                //Get class entity
+                $classentity = $this->em->getRepository('\Application\Entity\Classes')->find($formdata['Classmodule']['fkClassid']);
+                
+                //Get module entity
+                $moduleentity = $this->em->getRepository('\Application\Entity\Module')->find($formdata['Classmodule']['fkModuleid']);
+                
+                //Get period entity
+                $periodentity = $this->em->getRepository('\Application\Entity\Academicyear')->find($formdata['Classmodule']['fkAcademicperiod']);
+                
+                //Initialize fields
+                $entity->setCwkweight($formdata['Classmodule']['cwkweight']);
+                $entity->setExweight($formdata['Classmodule']['exweight']);
+                $entity->setFkAcademicperiod($periodentity);
+                $entity->setFkClassid($classentity);
+                $entity->setFkModuleid($moduleentity);
+                $entity->setIsCore($formdata['Classmodule']['isCore']);
+                $entity->setIsProject($formdata['Classmodule']['isProject']);
+                
+                if($this->preferences->saveClassModule($entity)){
+                    //Set success message and then redirect to view
+                    $this->flashMessenger()->addSuccessMessage("Module assigned to class");
+                    $this->redirect()->toRoute('administration', array('action'=>'classmodules',"id"=>$formdata['Classmodule']['fkClassid']));
+                }
+            }   
+        }
+        
+        return new ViewModel(array("availablemodules"=>$availablemodules,"form"=>$form,"details"=>$moduledetails,"class"=>$class));
+    }
+    
+   
     public function academicperiodAction(){
         
         $successMsg = "";
